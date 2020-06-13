@@ -24,7 +24,7 @@ const articleSchema = {
 const Article = mongoose.model("Article", articleSchema);
 
 
-
+/////////////////////Requests targetting all the articles///////////////////////////////////////////////////////////
 //chainable route handlers, refactured the code(app.route("/articles").get().post().delete()), chained get,post,delete method together
 app.route("/articles")
 
@@ -68,16 +68,62 @@ app.route("/articles")
 
 
 // //when client sends get request to localhost:3000/articles,server is configured to fetch all the articles to client
-// app.get("/articles", );
+// app.get("/articles", function(req,res){
+//   Article.find(function(err, foundArticles){
+//     if(!err){
+//         res.send(foundArticles);
+//     }
+//   else{
+//     res.send(err);
+//   }
+// });
+// });
 //
 //
 // //client makes post request to article route, that should create a new article and add it to our collection in Database(client sends data to server)
-// app.post("/articles", );
+// app.post("/articles", function(req,res){
+//   const newArticle = new Article({
+//     title: req.body.title,
+//     content: req.body.content
+//   });
+//   newArticle.save(function(err){
+//     if(!err){
+//         res.send("Successfully added a new article");
+//     }
+//   else{
+//     res.send(err);
+//   }
+//   });
+// });
 //
 //
 // //client is sending http delete request to /articles route, this should delete all articles in our collection
-// app.delete("/articles", );
+// app.delete("/articles", function(req,res){
+//   Article.deleteMany(function(err){
+//     if(!err){
+//       res.send("Successfully deleted all articles");
+//     }
+//     else{
+//       res.send(err);
+//     }
+//   });
+// });
 
+
+/////////////////////Requests targetting a specific article///////////////////////////////////////////////////////////
+app.route("/articles/:articleTitle")
+.get(function(req,res){
+  Article.findOne({title: req.params.articleTitle}, function(err, foundArticle){
+    if(foundArticle){
+      res.send(foundArticle);
+    }else{
+      res.dend("No articles matching that title was found.");
+    }
+  });
+});
+//space is represented by %20
+//if we want to search article with title Jack Bauer
+//localhost:3000/articles/Jack%20Bauer
 
 
 
