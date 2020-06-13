@@ -120,10 +120,30 @@ app.route("/articles/:articleTitle")
       res.dend("No articles matching that title was found.");
     }
   });
-});
+})
+//foundArticle is results(function(err,results))
 //space is represented by %20
 //if we want to search article with title Jack Bauer
 //localhost:3000/articles/Jack%20Bauer
+//if client wants to submit entire new version of the article on Jack Bauer, then it will be done by sending put request on this particular route
+//replacing a particular document inside the articles collection with whatever is sent over by the client
+.put(function(req,res){
+  Article.update(
+    //condition, updating article found through this search
+    {title: req.params.articleTitle},
+    //actual update we want to make, by update me mean we are replacing the original doc with new doc
+    {title: req.body.title, content: req.body.content},
+    //by default mongoose prevent properties to be overwritten
+    {overwrite: true},
+    function(err){
+      if(!err){
+        res.send("Successfully updated article");
+      }
+    }
+  );
+});
+
+
 
 
 
