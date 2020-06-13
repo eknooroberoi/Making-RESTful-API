@@ -24,8 +24,11 @@ const articleSchema = {
 const Article = mongoose.model("Article", articleSchema);
 
 
-//when client sends get request to localhost:3000/articles,server is configured to fetch all the articles to client
-app.get("/articles", function(req,res){
+
+//chainable route handlers, refactured the code(app.route("/articles").get().post().delete()), chained get,post,delete method together
+app.route("/articles")
+
+.get(function(req,res){
   Article.find(function(err, foundArticles){
     if(!err){
         res.send(foundArticles);
@@ -34,11 +37,9 @@ app.get("/articles", function(req,res){
     res.send(err);
   }
 });
-});
+})
 
-
-//client makes post request to article route, that should create a new article and add it to our collection in Database(client sends data to server)
-app.post("/articles", function(req,res){
+.post(function(req,res){
   const newArticle = new Article({
     title: req.body.title,
     content: req.body.content
@@ -51,11 +52,9 @@ app.post("/articles", function(req,res){
     res.send(err);
   }
   });
-});
+})
 
-
-//client is sending http delete request to /articles route, this should delete all articles in our collection
-app.delete("/articles", function(req,res){
+.delete(function(req,res){
   Article.deleteMany(function(err){
     if(!err){
       res.send("Successfully deleted all articles");
@@ -65,6 +64,23 @@ app.delete("/articles", function(req,res){
     }
   });
 });
+
+
+
+// //when client sends get request to localhost:3000/articles,server is configured to fetch all the articles to client
+// app.get("/articles", );
+//
+//
+// //client makes post request to article route, that should create a new article and add it to our collection in Database(client sends data to server)
+// app.post("/articles", );
+//
+//
+// //client is sending http delete request to /articles route, this should delete all articles in our collection
+// app.delete("/articles", );
+
+
+
+
 
 
 app.listen(3000, function() {
