@@ -131,7 +131,7 @@ app.route("/articles/:articleTitle")
   Article.update(
     //condition, updating article found through this search
     {title: req.params.articleTitle},
-    //actual update we want to make, by update me mean we are replacing the original doc with new doc
+    //actual update we want to make, by update me mean we are replacing the original doc with new doc, if we provide new value for only 1 parameter like content, it will remove title, coz instead of changing it replaces with value we provided, and if we dont provide value it removes that parameter.
     {title: req.body.title, content: req.body.content},
     //by default mongoose prevent properties to be overwritten
     {overwrite: true},
@@ -141,11 +141,24 @@ app.route("/articles/:articleTitle")
       }
     }
   );
+})
+//PATCH updates the fields we provided, and not the entire doc.It is not replacing with new doc, but making changes in the old doc
+//PUT makes the field not provided for changing as null
+//PATCH is HTTP method which is used when we want to update a specific field in specific document
+.patch(function(req,res){
+  Article.update(
+    {title: req.params.articleTitle},
+    //flag is set for values of the fields we want to update
+    {$set: req.body},
+    function(err){
+      if(!err){
+        res.send("Successfully updated article");
+      }else{
+        res.send(err);
+      }
+    }
+  );
 });
-
-
-
-
 
 
 
